@@ -1,2 +1,2 @@
-# project-cache-cleaner
-A simple application to manage projects cache and  build directories.
+# Pf
+Report and manage softere projects cache and build directories usage.
