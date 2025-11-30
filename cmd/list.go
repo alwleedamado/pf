@@ -24,7 +24,7 @@ func GetDirUsage() []provider.Usage {
 
 var ListCommand = &cobra.Command{
 	Use:   "list",
-	Short: "list directories",
+	Short: "List global & project caches",
 	Run: func(cmd *cobra.Command, args []string) {
 
 		usages := GetDirUsage()

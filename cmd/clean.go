@@ -39,7 +39,7 @@ var CleanCommand = &cobra.Command{
 				if !dryRun {
 					cleanDirectory(path)
 				} else {
-					fmt.Println("will delete", path)
+					fmt.Println("will be deleted")
 				}
 			}
 		}
