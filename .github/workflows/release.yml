@@ -1,43 +1,19 @@
-name: release
-
-on:
-  push:
-    tags:
-      - 'v*'          # v1.2.3  (semver)
-
-permissions:
-  contents: write     # create release
-  id-token: write     # cosign/keyless signing (optional)
-
 jobs:
-  dist:
+  release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-go@v5
-        with:
-          go-version: stable
-
-      # optional: embed commit / tag into binary
-      - name: Set ldflags
-        run: |
-          echo "LDFLAGS=-X main.version=${GITHUB_REF_NAME} -X main.commit=${GITHUB_SHA}"
-
-      # build all platforms
-      - name: Build release binaries
-        uses: goreleaser/goreleaser-action@v6
+      - uses: goreleaser/goreleaser-action@v6
         with:
           version: latest
           args: release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  # (optional) sign artefacts with cosign
-  sign:
-    needs: dist
-    runs-on: ubuntu-latest
-    steps:
       - uses: sigstore/cosign-installer@v3
-      - name: sign
-        run: cosign sign-blob --yes dist/checksums.txt
+      - name: sign checksums
+        run: |
+          cosign sign-blob --yes \
+            --annotation="tag=${GITHUB_REF_NAME}" \
+            dist/checksums.txt
