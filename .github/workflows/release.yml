@@ -13,7 +13,6 @@ jobs:
 
       - uses: sigstore/cosign-installer@v3
       - name: sign checksums
-        run: |
-          cosign sign-blob --yes \
+        run: cosign sign-blob --yes \
             --annotation="tag=${GITHUB_REF_NAME}" \
             dist/checksums.txt
