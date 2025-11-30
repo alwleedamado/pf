@@ -7,7 +7,7 @@ before:
 
 builds:
   - id: pf
-    main: ./cmd/pf        # adjust if your main is elsewhere
+    main: .        # adjust if your main is elsewhere
     binary: pf
     env:
       - CGO_ENABLED=0
