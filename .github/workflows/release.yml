@@ -40,7 +40,4 @@ jobs:
     steps:
       - uses: sigstore/cosign-installer@v3
       - name: sign
-        run: |
-          cosign sign-blob --yes dist/checksums.txt \
-            --annotations tag=${GITHUB_REF_NAME} \
-            --annotations repo=${GITHUB_REPOSITORY}
+        run: cosign sign-blob --yes dist/checksums.txt
