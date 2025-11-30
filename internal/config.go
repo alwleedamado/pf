@@ -4,6 +4,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/alwleedamado/pf/internal/provider"
 	"gopkg.in/yaml.v3"
 )
 
@@ -11,38 +12,15 @@ type config struct {
 	Dirs []string
 }
 
-var dirs = []string{
-	"~/.cache/ccache",
-	"~/.cache/clangd",
-	"~/.cargo/registry",
-	"~/.cargo/git",
-	"~/go/pkg/mod",
-	"~/.npm",
-	"~/.yarn",
-	"~/.yarn/berry/cache",
-	"~/.cache/pnpm",
-	"~/.cache/pip",
-	"~/.cache/poetry",
-	"~/.local/share/virtualenvs",
-	"~/.gradle/caches",
-	"~/.gradle/wrapper",
-	"~/.gradle/daemon",
-	"~/.m2/repository",
-	"~/.cache/JetBrains",
-	"~/.config/JetBrains",
-	"~/.config/Code/Cache",
-	"~/.config/Code/CachedData",
-	"~/.config/Code/CachedExtensions",
-	"~/.config/Code/User/workspaceStorage",
-	"~/Android/Sdk/.download",
-}
-
 func CreateCinfg() {
 	var conf config
 	var d []string
-	for _, dir := range dirs {
-		if _, err := os.Stat(ExpandTilde(dir)); err != nil {
-			d = append(d, dir)
+	for _, provider := range provider.GlobalProviders() {
+		dirs := provider.Paths()
+		for _, dir := range dirs {
+			if _, err := os.Stat(dir); err == nil {
+				d = append(d, dir)
+			}
 		}
 	}
 	conf.Dirs = d

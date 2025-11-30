@@ -10,6 +10,8 @@ var rootCommand = &cobra.Command{
 	Use:   "pf",
 	Short: "manage project dev files usage",
 	Long:  "report or clean projects cache, build directories, and temp data",
+	Run: func(command *cobra.Command, args []string) {
+	},
 }
 
 func Execute() {
@@ -19,6 +21,5 @@ func Execute() {
 }
 
 func Init() {
-	InitDirCommand()
-	rootCommand.AddCommand(DirCommand)
+	rootCommand.AddCommand(ListCommand)
 }
