@@ -1,0 +1,56 @@
+name: release
+
+on:
+  push:
+    tags:
+      - 'v*'            # v1.2.3
+
+permissions:
+  contents: write        # create release
+  id-token: write        # cosign keyless signing
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # needed for changelog
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: stable
+
+      # optional: log in to cosign keyless mode (no keys needed)
+      - name: Install cosign
+        uses: sigstore/cosign-installer@v3
+
+      # build, archive, checksum, release
+      - name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@v6
+        with:
+          version: latest
+          args: release --clean
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # sign the checksums file that GoReleaser just created
+      - name: Sign checksums
+        run: |
+          cosign sign-blob --yes \
+            --annotation="tag=${GITHUB_REF_NAME}" \
+            --annotation="repo=${GITHUB_REPOSITORY}" \
+            dist/checksums.txt
+
+      # upload the signature file so it appears on the release page
+      - name: Upload signature
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.goreleaser.outputs.upload_url }}
+          asset_path: ./dist/checksums.txt.sig
+          asset_name: checksums.txt.sig
+          asset_content_type: application/octet-stream
