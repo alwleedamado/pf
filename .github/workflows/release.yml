@@ -42,5 +42,5 @@ jobs:
       - name: sign
         run: |
           cosign sign-blob --yes dist/checksums.txt \
-            --annotation tag=${GITHUB_REF_NAME} \
-            --annotation repo=${GITHUB_REPOSITORY}
+            --annotations tag=${GITHUB_REF_NAME} \
+            --annotations repo=${GITHUB_REPOSITORY}
