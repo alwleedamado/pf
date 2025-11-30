@@ -39,10 +39,7 @@ jobs:
       # sign the checksums file that GoReleaser just created
       - name: Sign checksums
         run: |
-          cosign sign-blob --yes \
-            --annotation="tag=${GITHUB_REF_NAME}" \
-            --annotation="repo=${GITHUB_REPOSITORY}" \
-            dist/checksums.txt
+          cosign sign-blob --yes dist/checksums.txt
 
       # upload the signature file so it appears on the release page
       - name: Upload signature
