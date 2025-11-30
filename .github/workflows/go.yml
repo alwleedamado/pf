@@ -2,6 +2,8 @@ name: release
 
 on:
   push:
+    branches:
+      - master
     tags:
       - 'v*'            # v1.2.3
 
@@ -40,14 +42,3 @@ jobs:
       - name: Sign checksums
         run: |
           cosign sign-blob --yes dist/checksums.txt
-
-      # upload the signature file so it appears on the release page
-      - name: Upload signature
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.goreleaser.outputs.upload_url }}
-          asset_path: ./dist/checksums.txt.sig
-          asset_name: checksums.txt.sig
-          asset_content_type: application/octet-stream
