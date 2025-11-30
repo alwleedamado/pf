@@ -22,7 +22,6 @@ func GetDirUsage() []provider.Usage {
 	return usages
 }
 
-var listDirs bool
 var ListCommand = &cobra.Command{
 	Use:   "list",
 	Short: "list directories",
@@ -38,5 +37,5 @@ var ListCommand = &cobra.Command{
 	},
 }
 
-func InitDirCommand() {
+func InitListCmd() {
 }

@@ -3,6 +3,9 @@ package cmd
 import (
 	"os"
 	"path/filepath"
+
+	"github.com/alwleedamado/pf/internal/provider"
+	"github.com/spf13/cobra"
 )
 
 func cleanDirectory(path string) error {
@@ -23,4 +26,23 @@ func cleanDirectory(path string) error {
 		}
 	}
 	return nil
+}
+
+var dryRun bool
+var CleanCommand = &cobra.Command{
+	Use:   "clean",
+	Short: "clean directoris",
+	Run: func(cmd *cobra.Command, args []string) {
+		if !dryRun {
+			for _, p := range provider.GlobalProviders() {
+				for _, path := range p.Paths() {
+					cleanDirectory(path)
+				}
+			}
+		}
+	},
+}
+
+func InitCleanCmd() {
+	CleanCommand.Flags().BoolVar(&dryRun, "dry-run", false, "don't clean anything")
 }

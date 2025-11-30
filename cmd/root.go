@@ -21,5 +21,8 @@ func Execute() {
 }
 
 func Init() {
+	InitCleanCmd()
+	InitListCmd()
 	rootCommand.AddCommand(ListCommand)
+	rootCommand.AddCommand(CleanCommand)
 }
