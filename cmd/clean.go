@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 
@@ -33,10 +34,12 @@ var CleanCommand = &cobra.Command{
 	Use:   "clean",
 	Short: "clean directoris",
 	Run: func(cmd *cobra.Command, args []string) {
-		if !dryRun {
-			for _, p := range provider.GlobalProviders() {
-				for _, path := range p.Paths() {
+		for _, p := range provider.GlobalProviders() {
+			for _, path := range p.Paths() {
+				if !dryRun {
 					cleanDirectory(path)
+				} else {
+					fmt.Println("will delete", path)
 				}
 			}
 		}
